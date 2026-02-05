@@ -50,8 +50,8 @@
                 How AI Agents Work
             </h1>
             <p class="text-gray-400 max-w-2xl mx-auto">
-                An AI agent is a program that perceives, decides, and acts in a loop.
-                Watch the internal process unfold step by step.
+                An AI agent is a program that gathers context, asks an LLM what to do, then executes the action.
+                Only the "Decide" step calls the LLM—the rest is local code.
             </p>
         </div>
 
@@ -85,8 +85,8 @@
                                     </svg>
                                 </div>
                                 <div class="flex-1 min-w-0">
-                                    <div class="text-xs font-medium text-cyan-400">PERCEIVE</div>
-                                    <div id="perceive-text" class="text-xs text-gray-500 truncate">Gather information</div>
+                                    <div class="text-xs font-medium text-cyan-400">PERCEIVE <span class="text-gray-600 font-normal">(local)</span></div>
+                                    <div id="perceive-text" class="text-xs text-gray-500 truncate">Gather context locally</div>
                                 </div>
                             </div>
                             <div id="comp-decide" class="agent-component flex items-center gap-3 p-3 rounded-lg bg-dark-800/50 border border-transparent transition-all">
@@ -96,8 +96,8 @@
                                     </svg>
                                 </div>
                                 <div class="flex-1 min-w-0">
-                                    <div class="text-xs font-medium text-yellow-400">DECIDE</div>
-                                    <div id="decide-text" class="text-xs text-gray-500 truncate">Plan next action</div>
+                                    <div class="text-xs font-medium text-yellow-400">DECIDE <span class="text-purple-400 font-normal">(→ LLM)</span></div>
+                                    <div id="decide-text" class="text-xs text-gray-500 truncate">Ask LLM what to do</div>
                                 </div>
                             </div>
                             <div id="comp-act" class="agent-component flex items-center gap-3 p-3 rounded-lg bg-dark-800/50 border border-transparent transition-all">
@@ -107,8 +107,8 @@
                                     </svg>
                                 </div>
                                 <div class="flex-1 min-w-0">
-                                    <div class="text-xs font-medium text-green-400">ACT</div>
-                                    <div id="act-text" class="text-xs text-gray-500 truncate">Execute action</div>
+                                    <div class="text-xs font-medium text-green-400">ACT <span class="text-gray-600 font-normal">(local)</span></div>
+                                    <div id="act-text" class="text-xs text-gray-500 truncate">Execute tool/action</div>
                                 </div>
                             </div>
                         </div>
@@ -298,9 +298,9 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                         </svg>
                     </div>
-                    <h3 class="font-medium text-cyan-400 mb-2">Perceive</h3>
+                    <h3 class="font-medium text-cyan-400 mb-2">Perceive <span class="text-gray-500 text-xs">(no LLM)</span></h3>
                     <p class="text-gray-400 text-sm">
-                        Gather information from the environment, previous responses, and current context.
+                        Gather context locally: read previous LLM response, check tool outputs, collect environment state. Just data collection—no intelligence yet.
                     </p>
                 </div>
                 <div class="text-center">
@@ -309,9 +309,9 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
                         </svg>
                     </div>
-                    <h3 class="font-medium text-yellow-400 mb-2">Decide</h3>
+                    <h3 class="font-medium text-yellow-400 mb-2">Decide <span class="text-purple-400 text-xs">(→ LLM call)</span></h3>
                     <p class="text-gray-400 text-sm">
-                        Analyze the situation and determine the best next action to achieve the goal.
+                        <strong>This is the LLM call.</strong> Send all context to the LLM. It reasons about what to do and outputs a structured decision (e.g., "call tool X").
                     </p>
                 </div>
                 <div class="text-center">
@@ -320,9 +320,9 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                         </svg>
                     </div>
-                    <h3 class="font-medium text-green-400 mb-2">Act</h3>
+                    <h3 class="font-medium text-green-400 mb-2">Act <span class="text-gray-500 text-xs">(no LLM)</span></h3>
                     <p class="text-gray-400 text-sm">
-                        Execute the chosen action, typically by sending a request to the LLM.
+                        Execute what the LLM decided: run a tool, read a file, call an API, write code. This is hardcoded dispatch logic—no LLM involved.
                     </p>
                 </div>
                 <div class="text-center">
@@ -333,17 +333,37 @@
                     </div>
                     <h3 class="font-medium text-accent-glow mb-2">Loop</h3>
                     <p class="text-gray-400 text-sm">
-                        Check if the goal is achieved. If not, repeat the cycle with new information.
+                        The action produces output. Feed it back to Perceive and repeat until the LLM decides the goal is achieved.
                     </p>
                 </div>
             </div>
-            <div class="mt-8 p-4 bg-dark-700 rounded-lg border border-dark-600">
+
+            <!-- The Real Flow Diagram -->
+            <div class="mt-8 p-4 bg-dark-900 rounded-lg border border-dark-600">
+                <h3 class="font-medium text-accent-glow mb-3">The Real Flow</h3>
+                <div class="flex flex-wrap items-center justify-center gap-2 text-sm font-mono">
+                    <span class="px-3 py-1 bg-cyan-500/20 text-cyan-400 rounded">Gather Context</span>
+                    <span class="text-gray-500">→</span>
+                    <span class="px-3 py-1 bg-yellow-500/20 text-yellow-400 rounded border border-purple-500/50">LLM Call</span>
+                    <span class="text-gray-500">→</span>
+                    <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded">Execute Tool</span>
+                    <span class="text-gray-500">→</span>
+                    <span class="text-gray-400">↻ loop</span>
+                </div>
+                <p class="text-gray-500 text-xs mt-3 text-center">
+                    Only the "Decide" step calls the LLM. Perceive and Act are local operations.
+                </p>
+            </div>
+
+            <div class="mt-6 p-4 bg-dark-700 rounded-lg border border-dark-600">
                 <h3 class="font-medium text-accent-glow mb-2">Why Agents Are Powerful</h3>
                 <p class="text-gray-400 text-sm">
-                    This simple loop—perceive, decide, act, repeat—is the foundation of autonomous AI systems.
-                    By breaking complex tasks into smaller steps and adapting based on feedback, agents can handle
-                    problems that would be impossible with a single prompt. Modern agents like Claude Code use
-                    this pattern to write code, search documentation, run tests, and iterate until the task is complete.
+                    The intelligence lives in the "Decide" step—the LLM figures out what to do next.
+                    The agent code itself is simple: gather info, ask the LLM, execute whatever it says, repeat.
+                    By breaking complex tasks into smaller steps and letting the LLM adapt based on tool outputs,
+                    agents can handle problems that would be impossible with a single prompt.
+                    Modern agents like Claude Code use this pattern to write code, search documentation,
+                    run tests, and iterate until the task is complete.
                 </p>
             </div>
         </div>

@@ -5,6 +5,7 @@
  */
 
 // Scenario definitions with detailed component breakdowns
+// KEY: Only DECIDE calls the LLM. PERCEIVE and ACT are local operations.
 const SCENARIOS = {
     math: {
         id: 'math',
@@ -12,23 +13,26 @@ const SCENARIOS = {
         goal: 'Calculate (2+2) × 3',
         loops: [
             {
-                perceive: "Goal requires two operations. No previous results yet.",
-                decide: "Start with the first operation: addition.",
-                act: "Ask LLM to compute 2 + 2",
-                request: "What is 2 + 2?",
+                // PERCEIVE: Local data gathering (no LLM)
+                perceive: "Reading goal: need (2+2)×3. No previous results in memory.",
+                // DECIDE: This IS the LLM call
+                decide: "LLM decides: First compute 2+2, then multiply result by 3.",
+                request: "I need to calculate (2+2)×3. What is 2+2?",
                 response: "2 + 2 = 4",
-                context: "First result: 4",
-                reasoning: "Got 4. Now need to multiply by 3 to complete the goal.",
+                // ACT: Execute locally based on LLM's decision
+                act: "Storing result '4' in memory for next step.",
+                context: "Memory: first_result = 4",
+                reasoning: "Have intermediate result. Need multiplication step.",
                 shouldContinue: true
             },
             {
-                perceive: "Have result 4 from first operation. Need multiplication.",
-                decide: "Perform the second operation with the result.",
-                act: "Ask LLM to multiply 4 by 3",
-                request: "Now multiply 4 by 3",
+                perceive: "Reading memory: first_result = 4. Goal needs ×3.",
+                decide: "LLM decides: Multiply stored result by 3 to complete goal.",
+                request: "Now multiply 4 by 3 to complete the calculation.",
                 response: "4 × 3 = 12. The calculation is complete.",
-                context: "Final result: 12",
-                reasoning: "Both operations complete. Goal achieved!",
+                act: "Storing final result '12'. Marking task complete.",
+                context: "Memory: final_result = 12",
+                reasoning: "Calculation complete. Goal achieved!",
                 shouldContinue: false
             }
         ],
@@ -40,33 +44,33 @@ const SCENARIOS = {
         goal: 'Find the capital of France and its population',
         loops: [
             {
-                perceive: "Need two pieces of information: capital and population.",
-                decide: "Start by finding the capital city.",
-                act: "Query LLM for capital of France",
+                perceive: "Reading goal: need capital + population. Memory is empty.",
+                decide: "LLM decides: First find the capital, then look up its population.",
                 request: "What is the capital of France?",
                 response: "The capital of France is Paris.",
-                context: "Capital: Paris",
-                reasoning: "Got the capital. Now need population data.",
+                act: "Storing 'Paris' as capital in memory.",
+                context: "Memory: capital = 'Paris'",
+                reasoning: "Have capital. Still need population data.",
                 shouldContinue: true
             },
             {
-                perceive: "Know capital is Paris. Still need population.",
-                decide: "Query for population of the identified capital.",
-                act: "Ask LLM for Paris population",
+                perceive: "Reading memory: capital = 'Paris'. Population still needed.",
+                decide: "LLM decides: Query population for the stored capital city.",
                 request: "What is the population of Paris?",
                 response: "Paris has a population of approximately 2.1 million in the city proper.",
-                context: "Capital: Paris, Population: ~2.1M",
-                reasoning: "Have both pieces. Need to compile into final answer.",
+                act: "Storing '2.1 million' as population in memory.",
+                context: "Memory: capital = 'Paris', population = '2.1M'",
+                reasoning: "Have both data points. Ready to compile answer.",
                 shouldContinue: true
             },
             {
-                perceive: "Have all required data. Need to format response.",
-                decide: "Compile information into a complete answer.",
-                act: "Request final compilation",
-                request: "Compile the final answer about France's capital and population.",
+                perceive: "Reading memory: capital = 'Paris', population = '2.1M'. All data collected.",
+                decide: "LLM decides: All info gathered. Format final answer.",
+                request: "Compile: France's capital is Paris with population ~2.1 million.",
                 response: "Complete: Paris is the capital of France with a population of ~2.1 million.",
-                context: "Answer compiled and verified",
-                reasoning: "All information gathered and formatted. Task complete!",
+                act: "Writing final answer to output. Task complete.",
+                context: "Output ready: complete answer compiled",
+                reasoning: "Answer compiled and verified. Task complete!",
                 shouldContinue: false
             }
         ],
@@ -78,42 +82,42 @@ const SCENARIOS = {
         goal: 'Write a function to reverse a string',
         loops: [
             {
-                perceive: "Task: create a string reversal function. No code yet.",
-                decide: "First, plan the approach before writing code.",
-                act: "Request algorithm planning",
+                perceive: "Reading goal: write reverseString function. No code files yet.",
+                decide: "LLM decides: Plan algorithm first, then implement.",
                 request: "Plan an approach to reverse a string in JavaScript.",
                 response: "Approach: Split string into array, reverse array, join back to string.",
-                context: "Algorithm planned: split → reverse → join",
-                reasoning: "Have a solid plan. Now implement the actual code.",
+                act: "Saving plan to notes: split → reverse → join",
+                context: "Notes: algorithm = 'split, reverse, join'",
+                reasoning: "Have a plan. Next step: write the code.",
                 shouldContinue: true
             },
             {
-                perceive: "Have algorithm plan. Ready to write code.",
-                decide: "Implement the function following the plan.",
-                act: "Request code implementation",
-                request: "Write the reverseString function using this approach.",
+                perceive: "Reading notes: algorithm planned. No code file exists yet.",
+                decide: "LLM decides: Write the function using the planned approach.",
+                request: "Write the reverseString function using split/reverse/join.",
                 response: "function reverseString(str) {\n  return str.split('').reverse().join('');\n}",
-                context: "Code written, not yet tested",
-                reasoning: "Code looks correct but should verify with a test.",
+                act: "Writing code to file: reverseString.js created.",
+                context: "Files: reverseString.js (created)",
+                reasoning: "Code written. Should test before confirming.",
                 shouldContinue: true
             },
             {
-                perceive: "Function written. Need to verify it works.",
-                decide: "Test the function with a sample input.",
-                act: "Request test execution",
-                request: "Test the function with 'hello'.",
+                perceive: "Reading files: reverseString.js exists. Not tested yet.",
+                decide: "LLM decides: Run test with sample input to verify.",
+                request: "Test reverseString('hello') - what should it return?",
                 response: "reverseString('hello') returns 'olleh'. Test passed!",
-                context: "Test passed: 'hello' → 'olleh'",
-                reasoning: "Test passed. Should confirm task is fully complete.",
+                act: "Running test locally... Output: 'olleh'. Test PASSED.",
+                context: "Tests: 'hello' → 'olleh' ✓",
+                reasoning: "Test passed. Function works correctly.",
                 shouldContinue: true
             },
             {
-                perceive: "Code written and tested successfully.",
-                decide: "Get final confirmation that task is complete.",
-                act: "Request completion confirmation",
+                perceive: "Reading test results: all tests passing. Code complete.",
+                decide: "LLM decides: Tests pass, code is correct. Task complete.",
                 request: "Confirm the reverseString function is complete and working.",
-                response: "Confirmed: reverseString function works correctly. It reverses any input string.",
-                context: "Function verified and ready for use",
+                response: "Confirmed: reverseString function works correctly for all string inputs.",
+                act: "Marking task as DONE. No further action needed.",
+                context: "Status: COMPLETE",
                 reasoning: "Function verified and working. Task complete!",
                 shouldContinue: false
             }
@@ -126,33 +130,33 @@ const SCENARIOS = {
         goal: 'Analyze BTC price trend and decide whether to buy, sell, or hold',
         loops: [
             {
-                perceive: "Need market data to make trading decision.",
-                decide: "First, gather current price and recent trend data.",
-                act: "Request price analysis",
-                request: "What is the current BTC price trend over the last 24 hours?",
-                response: "BTC is at $67,500, up 3.2% in 24h. RSI at 58, showing moderate bullish momentum.",
-                context: "BTC: $67.5K, +3.2%, RSI: 58",
-                reasoning: "Price rising with healthy RSI. Need to check support/resistance levels.",
+                perceive: "Reading goal: need trading decision. Checking price API...",
+                decide: "LLM decides: Need current price and trend data first.",
+                request: "Analyze BTC: what's the current price and 24h trend?",
+                response: "BTC is at $67,500, up 3.2% in 24h. RSI at 58, moderate bullish momentum.",
+                act: "Calling price API... Storing: price=$67.5K, change=+3.2%, RSI=58",
+                context: "Data: price=$67.5K, 24h=+3.2%, RSI=58",
+                reasoning: "Have price data. Need support/resistance levels.",
                 shouldContinue: true
             },
             {
-                perceive: "Have price and momentum data. Need technical levels.",
-                decide: "Analyze key support and resistance levels.",
-                act: "Request technical analysis",
-                request: "What are the key support and resistance levels for BTC?",
-                response: "Support at $65,000, resistance at $70,000. Currently in middle of range with room to move.",
-                context: "Support: $65K, Resistance: $70K, Current: $67.5K",
-                reasoning: "In middle of range, bullish momentum. Evaluate risk/reward for decision.",
+                perceive: "Reading stored data: $67.5K, +3.2%, RSI 58. Need technicals.",
+                decide: "LLM decides: Analyze support/resistance for risk assessment.",
+                request: "What are BTC's key support and resistance levels?",
+                response: "Support at $65,000, resistance at $70,000. Mid-range with room to move.",
+                act: "Storing levels: support=$65K, resistance=$70K",
+                context: "Data: support=$65K, resistance=$70K, current=$67.5K",
+                reasoning: "Have all data. Ready to make decision.",
                 shouldContinue: true
             },
             {
-                perceive: "Have price, momentum, and technical levels.",
-                decide: "Make final trading recommendation based on analysis.",
-                act: "Request trading decision",
-                request: "Based on this analysis, should I buy, sell, or hold BTC?",
-                response: "Recommendation: HOLD with small BUY bias. Price has room to $70K resistance, but wait for a pullback to $66K for better entry. Set stop-loss at $64.5K.",
-                context: "Decision: HOLD / small BUY on dip to $66K",
-                reasoning: "Analysis complete. Clear recommendation with risk management.",
+                perceive: "Reading all data: $67.5K (mid-range), bullish momentum, clear levels.",
+                decide: "LLM decides: HOLD with buy bias. Wait for better entry.",
+                request: "Based on: price $67.5K, RSI 58, support $65K, resistance $70K - recommendation?",
+                response: "HOLD with small BUY bias. Wait for pullback to $66K for better entry. Stop-loss at $64.5K.",
+                act: "Logging recommendation: HOLD, buy on dip to $66K, stop at $64.5K",
+                context: "Decision: HOLD / BUY at $66K / Stop $64.5K",
+                reasoning: "Analysis complete. Clear actionable recommendation.",
                 shouldContinue: false
             }
         ],
@@ -581,9 +585,9 @@ class AgentSimulator {
             this.updateButtonVisibility();
 
             // Reset component texts for next loop
-            this.perceiveText.textContent = 'Gather information';
-            this.decideText.textContent = 'Plan next action';
-            this.actText.textContent = 'Execute action';
+            this.perceiveText.textContent = 'Gather context locally';
+            this.decideText.textContent = 'Ask LLM what to do';
+            this.actText.textContent = 'Execute tool/action';
         }
     }
 
@@ -632,9 +636,9 @@ class AgentSimulator {
         this.updateButtonVisibility();
 
         // Reset component texts
-        this.perceiveText.textContent = 'Gather information';
-        this.decideText.textContent = 'Plan next action';
-        this.actText.textContent = 'Execute action';
+        this.perceiveText.textContent = 'Gather context locally';
+        this.decideText.textContent = 'Ask LLM what to do';
+        this.actText.textContent = 'Execute tool/action';
 
         // Reset mind panel
         this.updateMind('-', '-', '-');
