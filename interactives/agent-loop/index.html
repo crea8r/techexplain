@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How AI Agents Work - TechExplain</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            900: '#0a0a0f',
+                            800: '#12121a',
+                            700: '#1a1a24',
+                            600: '#24242f',
+                        },
+                        accent: {
+                            primary: '#6366f1',
+                            secondary: '#8b5cf6',
+                            glow: '#818cf8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body class="bg-dark-900 text-gray-100 min-h-screen">
+    <!-- Header -->
+    <header class="border-b border-dark-700">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="../../index.html" class="flex items-center gap-2 text-gray-400 hover:text-gray-100 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                <span>Back to Home</span>
+            </a>
+            <span class="text-sm text-gray-500">TechExplain</span>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-6 py-8">
+        <!-- Title -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold mb-3 bg-gradient-to-r from-accent-primary to-accent-secondary bg-clip-text text-transparent">
+                How AI Agents Work
+            </h1>
+            <p class="text-gray-400 max-w-2xl mx-auto">
+                An AI agent is a program that perceives, decides, and acts in a loop.
+                Watch the internal process unfold step by step.
+            </p>
+        </div>
+
+        <!-- Visualization Area -->
+        <div class="bg-dark-800 rounded-2xl border border-dark-600 overflow-hidden mb-6">
+            <!-- Diagram Section -->
+            <div class="p-6 md:p-8 border-b border-dark-600">
+                <div class="flex flex-col lg:flex-row items-stretch justify-center gap-6">
+                    <!-- Agent Box (Expanded) -->
+                    <div id="agent-box" class="component-box bg-dark-700 rounded-xl border-2 border-dark-600 flex-1 max-w-sm">
+                        <div class="p-4 border-b border-dark-600">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-gray-100">AGENT</h3>
+                                    <p class="text-xs text-gray-500">Autonomous Program</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Internal Components -->
+                        <div class="p-4 space-y-3">
+                            <div id="comp-perceive" class="agent-component flex items-center gap-3 p-3 rounded-lg bg-dark-800/50 border border-transparent transition-all">
+                                <div class="w-8 h-8 rounded-md bg-cyan-500/20 flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                    </svg>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="text-xs font-medium text-cyan-400">PERCEIVE</div>
+                                    <div id="perceive-text" class="text-xs text-gray-500 truncate">Gather information</div>
+                                </div>
+                            </div>
+                            <div id="comp-decide" class="agent-component flex items-center gap-3 p-3 rounded-lg bg-dark-800/50 border border-transparent transition-all">
+                                <div class="w-8 h-8 rounded-md bg-yellow-500/20 flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                                    </svg>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="text-xs font-medium text-yellow-400">DECIDE</div>
+                                    <div id="decide-text" class="text-xs text-gray-500 truncate">Plan next action</div>
+                                </div>
+                            </div>
+                            <div id="comp-act" class="agent-component flex items-center gap-3 p-3 rounded-lg bg-dark-800/50 border border-transparent transition-all">
+                                <div class="w-8 h-8 rounded-md bg-green-500/20 flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                    </svg>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="text-xs font-medium text-green-400">ACT</div>
+                                    <div id="act-text" class="text-xs text-gray-500 truncate">Execute action</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Arrows & LLM -->
+                    <div class="flex flex-col items-center justify-center gap-4">
+                        <!-- Request Arrow -->
+                        <div id="arrow-request" class="arrow-container flex items-center gap-2 opacity-30">
+                            <div class="relative w-16 md:w-24 h-8 flex items-center">
+                                <div class="absolute inset-y-0 left-0 right-0 flex items-center">
+                                    <div class="h-0.5 w-full bg-accent-primary/50"></div>
+                                </div>
+                                <div class="arrow-particle"></div>
+                                <svg class="absolute right-0 w-3 h-3 text-accent-primary" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M5 12h14M12 5l7 7-7 7"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <span id="arrow-label" class="text-xs text-gray-500 px-2 py-1 bg-dark-700 rounded">text</span>
+                        <!-- Response Arrow -->
+                        <div id="arrow-response" class="arrow-container flex items-center gap-2 opacity-30">
+                            <div class="relative w-16 md:w-24 h-8 flex items-center">
+                                <div class="absolute inset-y-0 left-0 right-0 flex items-center">
+                                    <div class="h-0.5 w-full bg-accent-secondary/50"></div>
+                                </div>
+                                <div class="arrow-particle"></div>
+                                <svg class="absolute left-0 w-3 h-3 text-accent-secondary rotate-180" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M5 12h14M12 5l7 7-7 7"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LLM Box -->
+                    <div id="llm-box" class="component-box bg-dark-700 rounded-xl p-6 border-2 border-dark-600 w-full lg:w-48 text-center flex flex-col justify-center">
+                        <div class="w-12 h-12 mx-auto mb-3 rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="font-semibold text-gray-100">LLM</h3>
+                        <p class="text-xs text-gray-500 mt-1">Claude / GPT / etc</p>
+                        <div id="llm-status" class="mt-3 text-xs text-gray-500 hidden">
+                            <span class="inline-block w-2 h-2 bg-purple-500 rounded-full animate-pulse mr-1"></span>
+                            Processing...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loop Logic & Decision -->
+                <div class="mt-6 flex flex-col md:flex-row justify-center items-center gap-4">
+                    <div id="loop-logic" class="component-box bg-dark-700 rounded-xl p-4 border-2 border-dark-600 opacity-50">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5 text-accent-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                            </svg>
+                            <span class="text-sm text-gray-300">
+                                <span id="loop-status">Loop Logic: Check if task is complete</span>
+                            </span>
+                        </div>
+                    </div>
+                    <!-- Continue/Stop indicator -->
+                    <div id="decision-indicator" class="hidden">
+                        <div id="decision-continue" class="hidden px-4 py-2 rounded-lg bg-yellow-500/20 border border-yellow-500/50 text-yellow-400 text-sm font-medium">
+                            ↻ Continue Loop
+                        </div>
+                        <div id="decision-stop" class="hidden px-4 py-2 rounded-lg bg-green-500/20 border border-green-500/50 text-green-400 text-sm font-medium">
+                            ✓ Goal Achieved
+                        </div>
+                    </div>
+                </div>
+
+                <!-- State & Loop Counter -->
+                <div class="mt-6 flex flex-wrap justify-center gap-4 text-sm">
+                    <div class="state-indicator bg-dark-700 rounded-lg px-4 py-2">
+                        <span class="state-dot idle" id="state-dot"></span>
+                        <span class="text-gray-400">State: <span id="current-state" class="text-gray-100">IDLE</span></span>
+                    </div>
+                    <div class="bg-dark-700 rounded-lg px-4 py-2 text-gray-400">
+                        Loop: <span id="loop-count" class="text-accent-glow font-mono">0</span> / <span id="total-loops" class="font-mono">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Agent Mind Panel -->
+            <div class="p-6 md:p-8 border-b border-dark-600 bg-dark-900/50">
+                <div class="flex items-center gap-2 mb-4">
+                    <svg class="w-5 h-5 text-accent-glow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                    </svg>
+                    <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Agent's Mind</h3>
+                </div>
+                <div class="grid md:grid-cols-3 gap-4">
+                    <!-- Goal -->
+                    <div class="bg-dark-800 rounded-lg p-4 border border-dark-600">
+                        <div class="text-xs font-medium text-yellow-400 mb-2 flex items-center gap-2">
+                            <span>🎯</span> GOAL
+                        </div>
+                        <div id="mind-goal" class="text-sm text-gray-300">-</div>
+                    </div>
+                    <!-- Current Context -->
+                    <div class="bg-dark-800 rounded-lg p-4 border border-dark-600">
+                        <div class="text-xs font-medium text-cyan-400 mb-2 flex items-center gap-2">
+                            <span>📋</span> CONTEXT
+                        </div>
+                        <div id="mind-context" class="text-sm text-gray-300">-</div>
+                    </div>
+                    <!-- Reasoning -->
+                    <div class="bg-dark-800 rounded-lg p-4 border border-dark-600">
+                        <div class="text-xs font-medium text-purple-400 mb-2 flex items-center gap-2">
+                            <span>💭</span> REASONING
+                        </div>
+                        <div id="mind-reasoning" class="text-sm text-gray-300">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Message Log -->
+            <div class="p-6 md:p-8 border-b border-dark-600">
+                <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">Communication Log</h3>
+                <div id="message-log" class="message-log bg-dark-900 rounded-lg p-4 h-48 overflow-y-auto font-mono text-sm">
+                    <div class="text-gray-500 italic">Select a scenario and press Start to begin...</div>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="p-6 md:p-8 bg-dark-700/50">
+                <div class="flex flex-wrap items-center justify-between gap-4">
+                    <!-- Left: Mode & Speed -->
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center gap-2">
+                            <label class="text-sm text-gray-400">Mode:</label>
+                            <select id="mode-select" class="bg-dark-700 border border-dark-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-accent-primary">
+                                <option value="step">Step-by-Step</option>
+                                <option value="auto">Auto-Play</option>
+                            </select>
+                        </div>
+                        <div id="speed-control" class="flex items-center gap-2 hidden">
+                            <label class="text-sm text-gray-400">Speed:</label>
+                            <select id="speed-select" class="bg-dark-700 border border-dark-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-accent-primary">
+                                <option value="slow">Slow</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="fast">Fast</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Center: Action Buttons -->
+                    <div class="flex items-center gap-3">
+                        <button id="btn-start" class="btn-primary px-6 py-2 rounded-lg font-medium text-white">
+                            Start
+                        </button>
+                        <button id="btn-step" class="btn-secondary px-6 py-2 rounded-lg font-medium text-gray-300 hidden">
+                            Next Step
+                        </button>
+                        <button id="btn-pause" class="btn-secondary px-6 py-2 rounded-lg font-medium text-gray-300 hidden">
+                            Pause
+                        </button>
+                        <button id="btn-reset" class="btn-secondary px-6 py-2 rounded-lg font-medium text-gray-300">
+                            Reset
+                        </button>
+                    </div>
+
+                    <!-- Right: Scenario -->
+                    <div class="flex items-center gap-2">
+                        <label class="text-sm text-gray-400">Scenario:</label>
+                        <select id="scenario-select" class="bg-dark-700 border border-dark-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-accent-primary">
+                            <option value="math">Simple Math (2 loops)</option>
+                            <option value="research">Research Task (3 loops)</option>
+                            <option value="code">Code Writing (4 loops)</option>
+                            <option value="trading">Trading Decision (3 loops)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Explanation Section -->
+        <div class="bg-dark-800 rounded-2xl border border-dark-600 p-6 md:p-8">
+            <h2 class="text-xl font-semibold mb-6 text-gray-100">Understanding the Agent Loop</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="text-center">
+                    <div class="w-12 h-12 mx-auto mb-3 rounded-xl bg-cyan-500/20 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-medium text-cyan-400 mb-2">Perceive</h3>
+                    <p class="text-gray-400 text-sm">
+                        Gather information from the environment, previous responses, and current context.
+                    </p>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 mx-auto mb-3 rounded-xl bg-yellow-500/20 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-medium text-yellow-400 mb-2">Decide</h3>
+                    <p class="text-gray-400 text-sm">
+                        Analyze the situation and determine the best next action to achieve the goal.
+                    </p>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 mx-auto mb-3 rounded-xl bg-green-500/20 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-medium text-green-400 mb-2">Act</h3>
+                    <p class="text-gray-400 text-sm">
+                        Execute the chosen action, typically by sending a request to the LLM.
+                    </p>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 mx-auto mb-3 rounded-xl bg-accent-primary/20 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-accent-glow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-medium text-accent-glow mb-2">Loop</h3>
+                    <p class="text-gray-400 text-sm">
+                        Check if the goal is achieved. If not, repeat the cycle with new information.
+                    </p>
+                </div>
+            </div>
+            <div class="mt-8 p-4 bg-dark-700 rounded-lg border border-dark-600">
+                <h3 class="font-medium text-accent-glow mb-2">Why Agents Are Powerful</h3>
+                <p class="text-gray-400 text-sm">
+                    This simple loop—perceive, decide, act, repeat—is the foundation of autonomous AI systems.
+                    By breaking complex tasks into smaller steps and adapting based on feedback, agents can handle
+                    problems that would be impossible with a single prompt. Modern agents like Claude Code use
+                    this pattern to write code, search documentation, run tests, and iterate until the task is complete.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="max-w-6xl mx-auto px-6 py-8 text-center">
+        <a href="../../index.html" class="text-accent-primary hover:text-accent-glow transition-colors text-sm">
+            ← Back to all interactives
+        </a>
+    </footer>
+
+    <script src="../../js/agent-loop.js"></script>
+</body>
+</html>

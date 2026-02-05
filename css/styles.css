@@ -1,0 +1,324 @@
+/* TechExplain - Custom Styles */
+
+/* Base animations */
+@keyframes pulse-glow {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(99, 102, 241, 0.6);
+    }
+}
+
+@keyframes flow-right {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+@keyframes flow-left {
+    0% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+}
+
+@keyframes typing {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes blink-caret {
+    from, to {
+        border-color: transparent;
+    }
+    50% {
+        border-color: #818cf8;
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes spin-slow {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Component styles */
+.component-active {
+    animation: pulse-glow 1.5s ease-in-out infinite;
+}
+
+.arrow-flow-right .arrow-particle {
+    animation: flow-right 1s ease-in-out infinite;
+}
+
+.arrow-flow-left .arrow-particle {
+    animation: flow-left 1s ease-in-out infinite;
+}
+
+.typing-effect {
+    overflow: hidden;
+    white-space: nowrap;
+    animation: typing 0.5s steps(30, end) forwards;
+}
+
+.message-enter {
+    animation: fade-in 0.3s ease-out forwards;
+}
+
+.spinner {
+    animation: spin-slow 1s linear infinite;
+}
+
+/* Arrow styles */
+.arrow-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.arrow-particle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: linear-gradient(to right, #6366f1, #8b5cf6);
+    border-radius: 50%;
+}
+
+/* Message log styles */
+.message-log {
+    scrollbar-width: thin;
+    scrollbar-color: #6366f1 #1a1a24;
+}
+
+.message-log::-webkit-scrollbar {
+    width: 6px;
+}
+
+.message-log::-webkit-scrollbar-track {
+    background: #1a1a24;
+    border-radius: 3px;
+}
+
+.message-log::-webkit-scrollbar-thumb {
+    background: #6366f1;
+    border-radius: 3px;
+}
+
+.message-log::-webkit-scrollbar-thumb:hover {
+    background: #818cf8;
+}
+
+/* Button styles */
+.btn-primary {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background: #24242f;
+    border: 1px solid #3f3f4a;
+    transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background: #2f2f3a;
+    border-color: #6366f1;
+}
+
+/* State indicator */
+.state-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.state-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.state-dot.idle {
+    background: #6b7280;
+}
+
+.state-dot.sending {
+    background: #6366f1;
+    animation: pulse-glow 1s ease-in-out infinite;
+}
+
+.state-dot.waiting {
+    background: #f59e0b;
+    animation: pulse-glow 1s ease-in-out infinite;
+}
+
+.state-dot.processing {
+    background: #8b5cf6;
+    animation: pulse-glow 1s ease-in-out infinite;
+}
+
+.state-dot.done {
+    background: #10b981;
+}
+
+/* Component boxes */
+.component-box {
+    transition: all 0.3s ease;
+}
+
+.component-box.active {
+    border-color: #6366f1;
+    box-shadow: 0 0 30px rgba(99, 102, 241, 0.3);
+}
+
+/* Speed indicator */
+.speed-indicator {
+    display: flex;
+    gap: 4px;
+}
+
+.speed-bar {
+    width: 4px;
+    height: 12px;
+    background: #3f3f4a;
+    border-radius: 2px;
+    transition: background 0.2s ease;
+}
+
+.speed-bar.active {
+    background: #6366f1;
+}
+
+/* Agent internal components */
+.agent-component {
+    transition: all 0.3s ease;
+}
+
+.agent-component.active {
+    transform: scale(1.02);
+}
+
+/* Pulse animations for different component colors */
+@keyframes pulse-cyan {
+    0%, 100% {
+        box-shadow: 0 0 10px rgba(34, 211, 238, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(34, 211, 238, 0.4);
+    }
+}
+
+@keyframes pulse-yellow {
+    0%, 100% {
+        box-shadow: 0 0 10px rgba(250, 204, 21, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(250, 204, 21, 0.4);
+    }
+}
+
+@keyframes pulse-green {
+    0%, 100% {
+        box-shadow: 0 0 10px rgba(34, 197, 94, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(34, 197, 94, 0.4);
+    }
+}
+
+.border-cyan-500 {
+    animation: pulse-cyan 1.5s ease-in-out infinite;
+}
+
+.border-yellow-500 {
+    animation: pulse-yellow 1.5s ease-in-out infinite;
+}
+
+.border-green-500 {
+    animation: pulse-green 1.5s ease-in-out infinite;
+}
+
+/* Decision indicator animations */
+@keyframes slide-in {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+#decision-continue:not(.hidden),
+#decision-stop:not(.hidden) {
+    animation: slide-in 0.3s ease-out forwards;
+}
+
+/* Mind panel styles */
+#mind-goal,
+#mind-context,
+#mind-reasoning {
+    transition: all 0.3s ease;
+    min-height: 2.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    .component-box {
+        padding: 1rem;
+    }
+
+    .arrow-container {
+        transform: rotate(90deg);
+        margin: 1rem auto;
+    }
+}
+
+@media (max-width: 1024px) {
+    #agent-box {
+        max-width: none;
+    }
+}
