@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The DNS Journey - TechExplain</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            900: '#0a0a0f',
+                            800: '#12121a',
+                            700: '#1a1a24',
+                            600: '#24242f',
+                        },
+                        accent: {
+                            primary: '#6366f1',
+                            secondary: '#8b5cf6',
+                            glow: '#818cf8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="../../css/styles.css">
+    <style>
+        .journey-step {
+            transition: all 0.5s ease;
+        }
+        .journey-step.active {
+            transform: scale(1.05);
+        }
+        .journey-step.completed {
+            opacity: 0.6;
+        }
+        .packet {
+            position: absolute;
+            transition: all 0.8s ease-in-out;
+        }
+        .path-line {
+            stroke-dasharray: 8, 4;
+            animation: dash-flow 1s linear infinite;
+        }
+        @keyframes dash-flow {
+            to { stroke-dashoffset: -12; }
+        }
+        .pulse-ring {
+            animation: pulse-ring 1.5s ease-out infinite;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+        .typing-cursor {
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+        .bounce-in {
+            animation: bounce-in 0.5s ease-out;
+        }
+        @keyframes bounce-in {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-dark-900 text-gray-100 min-h-screen">
+    <!-- Header -->
+    <header class="border-b border-dark-700">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="../../index.html" class="flex items-center gap-2 text-gray-400 hover:text-gray-100 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                <span>Back to Home</span>
+            </a>
+            <span class="text-sm text-gray-500">TechExplain</span>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-6 py-8">
+        <!-- Title -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold mb-3 bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                The DNS Journey
+            </h1>
+            <p class="text-gray-400 max-w-2xl mx-auto">
+                Ever wondered what happens when you type a website address?
+                Let's follow your request on its journey across the internet!
+            </p>
+        </div>
+
+        <!-- The Big Picture - Simple Analogy -->
+        <div class="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-2xl p-6 mb-6 border border-blue-500/20">
+            <div class="flex items-start gap-4">
+                <div class="text-4xl">📖</div>
+                <div>
+                    <h3 class="font-semibold text-blue-400 mb-2">Think of it like a phone book!</h3>
+                    <p class="text-gray-400 text-sm">
+                        You know your friend's <strong class="text-white">name</strong> ("google.com"), but to call them,
+                        you need their <strong class="text-white">phone number</strong> ("142.250.80.46").
+                        <strong class="text-cyan-400">DNS is the internet's phone book</strong> — it looks up the number for you!
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Visualization -->
+        <div class="bg-dark-800 rounded-2xl border border-dark-600 overflow-hidden mb-6">
+            <!-- URL Input Section -->
+            <div class="p-6 border-b border-dark-600 bg-dark-700/50">
+                <div class="flex flex-col md:flex-row items-center gap-4">
+                    <div class="flex-1 w-full">
+                        <label class="text-sm text-gray-400 mb-2 block">Type a website address:</label>
+                        <div class="flex items-center bg-dark-900 rounded-lg border border-dark-600 overflow-hidden">
+                            <span class="px-3 py-3 bg-dark-700 text-gray-500 text-sm border-r border-dark-600">https://</span>
+                            <input type="text" id="domain-input" value="google.com"
+                                class="flex-1 bg-transparent px-4 py-3 text-lg font-mono focus:outline-none"
+                                placeholder="example.com">
+                        </div>
+                    </div>
+                    <div class="flex gap-3">
+                        <button id="btn-go" class="btn-primary px-8 py-3 rounded-lg font-medium text-white flex items-center gap-2">
+                            <span>Go!</span>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                            </svg>
+                        </button>
+                        <button id="btn-reset" class="btn-secondary px-6 py-3 rounded-lg font-medium text-gray-300">
+                            Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Journey Visualization -->
+            <div class="p-6 md:p-8">
+                <div id="journey-container" class="relative min-h-[500px]">
+                    <!-- Step 1: Your Computer -->
+                    <div id="step-computer" class="journey-step absolute left-0 top-0 w-32 text-center">
+                        <div class="w-20 h-20 mx-auto mb-2 rounded-2xl bg-gradient-to-br from-gray-600 to-gray-700 flex items-center justify-center relative">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                            <div id="computer-pulse" class="absolute inset-0 rounded-2xl bg-blue-500/30 pulse-ring hidden"></div>
+                        </div>
+                        <div class="text-sm font-medium text-gray-300">Your Computer</div>
+                        <div id="computer-status" class="text-xs text-gray-500 mt-1">Ready</div>
+                    </div>
+
+                    <!-- Step 2: DNS Resolver -->
+                    <div id="step-dns" class="journey-step absolute left-1/2 -translate-x-1/2 top-0 w-40 text-center opacity-40">
+                        <div class="w-20 h-20 mx-auto mb-2 rounded-2xl bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center relative">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                            </svg>
+                            <div id="dns-pulse" class="absolute inset-0 rounded-2xl bg-yellow-500/30 pulse-ring hidden"></div>
+                        </div>
+                        <div class="text-sm font-medium text-gray-300">DNS Resolver</div>
+                        <div class="text-xs text-yellow-400">📖 "Phone Book"</div>
+                        <div id="dns-status" class="text-xs text-gray-500 mt-1">Waiting</div>
+                    </div>
+
+                    <!-- Step 3: Website Server -->
+                    <div id="step-server" class="journey-step absolute right-0 top-0 w-32 text-center opacity-40">
+                        <div class="w-20 h-20 mx-auto mb-2 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center relative">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path>
+                            </svg>
+                            <div id="server-pulse" class="absolute inset-0 rounded-2xl bg-green-500/30 pulse-ring hidden"></div>
+                        </div>
+                        <div class="text-sm font-medium text-gray-300">Website Server</div>
+                        <div id="server-ip" class="text-xs text-green-400 font-mono">IP: ???</div>
+                        <div id="server-status" class="text-xs text-gray-500 mt-1">Waiting</div>
+                    </div>
+
+                    <!-- Connection Lines SVG -->
+                    <svg id="connections" class="absolute inset-0 w-full h-full pointer-events-none" style="top: 40px;">
+                        <!-- Computer to DNS -->
+                        <line id="line-computer-dns" x1="80" y1="40" x2="50%" y2="40"
+                            stroke="#374151" stroke-width="3" stroke-linecap="round"/>
+                        <!-- DNS to Server -->
+                        <line id="line-dns-server" x1="50%" y1="40" x2="calc(100% - 80px)" y2="40"
+                            stroke="#374151" stroke-width="3" stroke-linecap="round"/>
+                    </svg>
+
+                    <!-- Animated Packet -->
+                    <div id="packet" class="packet hidden" style="top: 65px; left: 60px;">
+                        <div class="w-8 h-8 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-500/50">
+                            <span class="text-xs">📨</span>
+                        </div>
+                    </div>
+
+                    <!-- Journey Log -->
+                    <div class="absolute top-36 left-0 right-0">
+                        <div class="bg-dark-900/80 rounded-xl p-4 border border-dark-600">
+                            <div class="flex items-center gap-2 mb-3">
+                                <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                                <span class="text-sm font-medium text-gray-400">Journey Log</span>
+                            </div>
+                            <div id="journey-log" class="space-y-2 font-mono text-sm max-h-64 overflow-y-auto">
+                                <div class="text-gray-500 italic">Click "Go!" to start the journey...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Current Step Explanation -->
+            <div id="step-explanation" class="p-6 border-t border-dark-600 bg-dark-900/50">
+                <div class="flex items-start gap-4">
+                    <div id="step-icon" class="text-4xl">🖥️</div>
+                    <div>
+                        <h3 id="step-title" class="font-semibold text-lg text-gray-100 mb-1">Ready to explore!</h3>
+                        <p id="step-description" class="text-gray-400 text-sm">
+                            Type a website address above and click "Go!" to see how your browser finds and loads a website.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Speed Control -->
+            <div class="p-4 border-t border-dark-600 bg-dark-700/30 flex items-center justify-center gap-4">
+                <label class="text-sm text-gray-400">Animation Speed:</label>
+                <select id="speed-select" class="bg-dark-700 border border-dark-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-accent-primary">
+                    <option value="slow">Slow (learning)</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="fast">Fast</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Step-by-Step Explanation -->
+        <div class="bg-dark-800 rounded-2xl border border-dark-600 p-6 md:p-8">
+            <h2 class="text-xl font-semibold mb-6 text-gray-100">The 5 Steps of Every Website Visit</h2>
+
+            <div class="space-y-6">
+                <!-- Step 1 -->
+                <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">1</div>
+                    <div>
+                        <h3 class="font-medium text-blue-400 mb-1">You type a name</h3>
+                        <p class="text-gray-400 text-sm">
+                            You type "google.com" in your browser. This is called a <strong class="text-white">domain name</strong> —
+                            a human-friendly name that's easy to remember (much better than memorizing numbers!).
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center text-yellow-400 font-bold">2</div>
+                    <div>
+                        <h3 class="font-medium text-yellow-400 mb-1">Browser asks: "What's the number?"</h3>
+                        <p class="text-gray-400 text-sm">
+                            Your browser doesn't know where "google.com" actually lives. So it asks a <strong class="text-white">DNS Resolver</strong>
+                            (like calling 411 for directory assistance): <em>"Hey, what's the IP address for google.com?"</em>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-orange-500/20 flex items-center justify-center text-orange-400 font-bold">3</div>
+                    <div>
+                        <h3 class="font-medium text-orange-400 mb-1">DNS looks it up</h3>
+                        <p class="text-gray-400 text-sm">
+                            The DNS resolver searches its records (or asks other DNS servers) and finds that google.com = <strong class="text-white font-mono">142.250.80.46</strong>.
+                            This <strong class="text-white">IP address</strong> is like a street address for computers.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 font-bold">4</div>
+                    <div>
+                        <h3 class="font-medium text-green-400 mb-1">Browser connects to the server</h3>
+                        <p class="text-gray-400 text-sm">
+                            Now your browser knows the address! It sends a request directly to <strong class="text-white font-mono">142.250.80.46</strong>:
+                            <em>"Hey server, please send me the homepage!"</em>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Step 5 -->
+                <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">5</div>
+                    <div>
+                        <h3 class="font-medium text-purple-400 mb-1">Server sends the website back</h3>
+                        <p class="text-gray-400 text-sm">
+                            The server responds with HTML, images, and code. Your browser receives it all and
+                            <strong class="text-white">renders</strong> (draws) the beautiful webpage you see!
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fun Facts -->
+            <div class="mt-8 p-4 bg-dark-700 rounded-lg border border-dark-600">
+                <h3 class="font-medium text-accent-glow mb-3 flex items-center gap-2">
+                    <span>💡</span> Fun Facts
+                </h3>
+                <ul class="text-gray-400 text-sm space-y-2">
+                    <li>• This whole process happens in <strong class="text-white">milliseconds</strong> — faster than you can blink!</li>
+                    <li>• Your browser <strong class="text-white">caches</strong> (remembers) IP addresses so it doesn't have to ask DNS every time.</li>
+                    <li>• There are only about <strong class="text-white">4 billion</strong> possible IPv4 addresses — that's why we're running out!</li>
+                    <li>• "DNS" stands for <strong class="text-white">Domain Name System</strong> — invented in 1983.</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="max-w-6xl mx-auto px-6 py-8 text-center">
+        <a href="../../index.html" class="text-accent-primary hover:text-accent-glow transition-colors text-sm">
+            ← Back to all interactives
+        </a>
+    </footer>
+
+    <script src="../../js/dns-journey.js"></script>
+</body>
+</html>
